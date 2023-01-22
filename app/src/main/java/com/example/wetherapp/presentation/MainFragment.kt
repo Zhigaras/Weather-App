@@ -6,9 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.example.wetherapp.databinding.FragmentMainBinding
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainFragment : Fragment() {
@@ -38,6 +38,11 @@ class MainFragment : Fragment() {
             viewModel.test()
         }
         
+        viewLifecycleOwner.lifecycleScope.launchWhenStarted {
+            viewModel.dbFlow.collect {
+                binding.message.text = it.toString()
+            }
+        }
     }
     
     

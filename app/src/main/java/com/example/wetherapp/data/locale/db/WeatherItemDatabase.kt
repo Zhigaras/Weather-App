@@ -1,4 +1,4 @@
-package com.example.wetherapp.data.locale
+package com.example.wetherapp.data.locale.db
 
 import androidx.room.Database
 import androidx.room.RoomDatabase

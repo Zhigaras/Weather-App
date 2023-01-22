@@ -1,7 +1,7 @@
 package com.example.wetherapp.data.remote.responses
 
 
-import com.example.wetherapp.data.locale.WeatherItem
+import com.example.wetherapp.data.locale.db.WeatherItem
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 

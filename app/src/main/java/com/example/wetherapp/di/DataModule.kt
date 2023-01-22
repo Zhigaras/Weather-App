@@ -1,9 +1,14 @@
 package com.example.wetherapp.di
 
 import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.PreferenceDataStoreFactory
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.room.Room
-import com.example.wetherapp.data.locale.WeatherDao
-import com.example.wetherapp.data.locale.WeatherItemDatabase
+import com.example.wetherapp.data.locale.DataStorageManager
+import com.example.wetherapp.data.locale.db.WeatherDao
+import com.example.wetherapp.data.locale.db.WeatherItemDatabase
 import com.example.wetherapp.data.remote.WeatherApi
 import dagger.Module
 import dagger.Provides
@@ -37,9 +42,7 @@ class DataModule {
     
     @Provides
     @Singleton
-    fun providesWeatherDatabase(
-        @ApplicationContext app: Context
-    ): WeatherItemDatabase {
+    fun providesWeatherDatabase(@ApplicationContext app: Context): WeatherItemDatabase {
         return Room.databaseBuilder(
             app,
             WeatherItemDatabase::class.java,
@@ -51,5 +54,13 @@ class DataModule {
     @Singleton
     fun providesWeatherDao(db: WeatherItemDatabase): WeatherDao {
         return db.getWeatherDao()
+    }
+    
+    @Provides
+    @Singleton
+    fun providesPreferencesDataStore(@ApplicationContext app: Context): DataStore<Preferences> {
+        return PreferenceDataStoreFactory.create(
+            produceFile = { app.preferencesDataStoreFile(DataStorageManager.PREFERENCES_STORE_NAME) }
+        )
     }
 }

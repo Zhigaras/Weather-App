@@ -13,10 +13,13 @@ class MainViewModel @Inject constructor(
     private val mainRepository: MainRepository
 ) : ViewModel() {
 
+    val dbFlow = mainRepository.observeWeatherItems()
+    
     fun test() {
         viewModelScope.launch {
-            val result = mainRepository.getWeather("moscow")
-            Log.d("AAA", result?.toWeatherItem().toString())
+            val result = mainRepository.getWeather("moscow")!!.toWeatherItem()
+            Log.d("AAA", result.toString())
+            mainRepository.saveWeatherItem(result)
         }
     }
 }

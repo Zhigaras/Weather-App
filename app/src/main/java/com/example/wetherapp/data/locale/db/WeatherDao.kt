@@ -1,4 +1,4 @@
-package com.example.wetherapp.data.locale
+package com.example.wetherapp.data.locale.db
 
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
@@ -9,9 +9,12 @@ interface WeatherDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertWeatherItem(weatherItem: WeatherItem)
     
-    @Delete
+    @Delete()
     suspend fun deleteWeatherItem(weatherItem: WeatherItem)
     
-    @Query(value = "SELECT * FROM weather_items")
-    fun observeWeatherItem(): Flow<WeatherItem>
+    @Query("SELECT * FROM weather_items ORDER BY lastUpdated DESC")
+    fun observeWeatherItems(): Flow<List<WeatherItem>>
+    
+    @Query("DELETE FROM weather_items")
+    suspend fun clearDb()
 }
