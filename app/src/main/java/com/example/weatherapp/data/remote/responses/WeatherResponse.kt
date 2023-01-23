@@ -14,11 +14,13 @@ data class WeatherResponse(
 ) {
     
     fun toWeatherItem(): WeatherItem {
+        val updateDate = current.lastUpdated.takeWhile { it != ' ' }
         return WeatherItem(
-            id = location.name + current.lastUpdated.takeWhile { it != ' ' },
+            id = location.name + updateDate,
             cityName = location.name,
-            country = location.country,
-            lastUpdated = current.lastUpdatedEpoch,
+            countryName = location.country,
+            lastUpdatedEpoch = current.lastUpdatedEpoch,
+            lastUpdated = updateDate,
             temp = current.tempC,
             condition = current.condition.text,
             conditionIcon = current.condition.icon,

@@ -5,16 +5,20 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -23,23 +27,48 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 @Composable
-fun SearchScreen() {
+fun SearchScreen(
+    onSearch: () -> Unit
+) {
     val viewModel: MainViewModel = hiltViewModel()
     val lazyHistoryItems = viewModel.historyItemsFlow.collectAsState(initial = emptyList())
-    
     val textState = remember { mutableStateOf(TextFieldValue("")) }
+    fun onItemClick(item: String) {
+        textState.value = TextFieldValue(item)
+        viewModel.searchWeather(item)
+        onSearch()
+    }
+    
     Column {
-        MySearchView(textState, onSearchClick = { viewModel.searchWeather(it)})
-        ItemList(state = textState, items = lazyHistoryItems)
-        
+        CitySearchView(textState, onSearchButtonClick = { viewModel.searchWeather(it) })
+        Row(
+            modifier = Modifier.padding(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "Search history",
+                style = MaterialTheme.typography.bodySmall,
+                color = Color.Gray,
+                modifier = Modifier.weight(1f)
+            )
+            ClickableText(
+                text = AnnotatedString("clear"),
+                onClick = { viewModel.clearRequestHistory() })
+        }
+        ItemList(
+            state = textState,
+            items = lazyHistoryItems,
+            onItemClick = { onItemClick(it) },
+            onDeleteClick = { viewModel.deleteRequest(it) }
+        )
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MySearchView(
+fun CitySearchView(
     state: MutableState<TextFieldValue>,
-    onSearchClick: (String) -> Unit
+    onSearchButtonClick: (String) -> Unit
 ) {
     TextField(
         value = state.value,
@@ -57,9 +86,9 @@ fun MySearchView(
                     )
                 },
                 modifier = Modifier
-                    .padding(15.dp)
-                    .size(24.dp),
-                onClick = { onSearchClick(state.value.text) }
+                    .padding(4.dp)
+                    .size(40.dp),
+                onClick = { onSearchButtonClick(state.value.text) }
             )
         },
         trailingIcon = {
@@ -67,27 +96,24 @@ fun MySearchView(
                 IconButton(
                     onClick = {
                         state.value =
-                            TextFieldValue("") // Remove text from TextField when you press the 'X' icon
+                            TextFieldValue("")
                     }
                 ) {
                     Icon(
                         Icons.Default.Close,
                         contentDescription = "",
                         modifier = Modifier
-                            .padding(15.dp)
+                            .padding(8.dp)
                             .size(48.dp)
                     )
                 }
             }
         },
         singleLine = true,
-        shape = RectangleShape, // The TextFiled has rounded corners top left and right by default
+        shape = RectangleShape,
         colors = TextFieldDefaults.textFieldColors(
             textColor = Color.White,
             cursorColor = Color.White,
-//            leadingIconColor = Color.White,
-//            trailingIconColor = Color.White,
-//            backgroundColor = MaterialTheme.colors.primary,
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
             disabledIndicatorColor = Color.Transparent
@@ -99,7 +125,9 @@ fun MySearchView(
 @Composable
 fun ItemList(
     state: MutableState<TextFieldValue>,
-    items: State<List<String>>
+    items: State<List<String>>,
+    onItemClick: (String) -> Unit,
+    onDeleteClick: (String) -> Unit
 ) {
     
     var filteredItems: List<String>
@@ -121,23 +149,48 @@ fun ItemList(
         items(filteredItems) { filteredItem ->
             ItemListItem(
                 ItemText = filteredItem,
-                onItemClick = {  }
+                onItemClick = { onItemClick(it) },
+                onDeleteClick = onDeleteClick
             )
         }
-        
     }
 }
 
 @Composable
-fun ItemListItem(ItemText: String, onItemClick: (String) -> Unit) {
+fun ItemListItem(
+    ItemText: String,
+    onItemClick: (String) -> Unit = {},
+    onDeleteClick: (String) -> Unit = {}
+) {
     Row(
         modifier = Modifier
             .clickable(onClick = { onItemClick(ItemText) })
             .background(color = MaterialTheme.colorScheme.background)
-            .height(57.dp)
             .fillMaxWidth()
-            .padding(PaddingValues(8.dp, 16.dp))
+            .padding(PaddingValues(8.dp, 8.dp))
+            .wrapContentHeight(),
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(text = ItemText, fontSize = 18.sp, color = MaterialTheme.colorScheme.onBackground)
+        Text(
+            text = ItemText,
+            style = MaterialTheme.typography.headlineSmall,
+            color = MaterialTheme.colorScheme.onBackground,
+            modifier = Modifier.weight(1f),
+            maxLines = 1
+        )
+        IconButton(
+            onClick = { onDeleteClick(ItemText) }
+        ) {
+            Icon(
+                imageVector = Icons.Default.Close,
+                contentDescription = "Delete request"
+            )
+        }
     }
+}
+
+@Preview
+@Composable
+fun SearchPreview() {
+    ItemListItem("Example")
 }

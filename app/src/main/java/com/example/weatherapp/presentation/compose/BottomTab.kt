@@ -19,14 +19,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.weatherapp.presentation.Destination
+import com.example.weatherapp.presentation.Search
+import com.example.weatherapp.presentation.bottomTabList
 
 @Composable
 fun BottomTabRow(
     allScreens: List<Destination>,
-    onTabSelected: (Destination) -> Unit,
+    onTabSelected: (Destination) -> Unit = {},
     currentScreen: Destination,
     bottomBarState: Boolean
 ) {
@@ -51,7 +54,7 @@ fun BottomTabRow(
                     BottomTab(
                         text = screen.route,
                         icon = screen.icon,
-                        onSelected = { onTabSelected },
+                        onSelected = { onTabSelected(screen) },
                         selected = currentScreen == screen
                     )
                 }
@@ -69,8 +72,8 @@ fun BottomTab(
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
         modifier = Modifier
-            .padding(16.dp)
             .height(56.dp)
             .selectable(
                 selected = selected,
@@ -87,7 +90,18 @@ fun BottomTab(
         Image(
             painter = painterResource(id = icon),
             contentDescription = null,
+            modifier = Modifier.weight(1f)
         )
-        Text(text = text, color = MaterialTheme.colorScheme.onPrimary)
+        if (!selected) {
+            Text(text = text, color = MaterialTheme.colorScheme.onPrimary)
+        }
     }
+}
+
+@Preview
+@Composable
+fun BottomTabRowPreview() {
+    
+    BottomTabRow(bottomTabList, {}, Search, true)
+    
 }

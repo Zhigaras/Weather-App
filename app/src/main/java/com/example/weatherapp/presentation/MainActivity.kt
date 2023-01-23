@@ -55,20 +55,21 @@ fun WeatherApplication() {
     val currentScreen = bottomTabList.find { it.route == currentDestination?.route } ?: Search
     
     bottomBarState = when (currentDestination?.route) {
-        DetailsScreen.route -> false
+        Details.route -> false
         else -> true
     }
     
-    Scaffold(bottomBar = {
-        BottomTabRow(
-            allScreens = bottomTabList,
-            onTabSelected = { newScreen ->
-                navController.navigateSingleTopTo(newScreen.route)
-            },
-            currentScreen = currentScreen,
-            bottomBarState = bottomBarState
-        )
-    }
+    Scaffold(
+        bottomBar = {
+            BottomTabRow(
+                allScreens = bottomTabList,
+                onTabSelected = { newScreen ->
+                    navController.navigateSingleTopTo(newScreen.route)
+                },
+                currentScreen = currentScreen,
+                bottomBarState = bottomBarState
+            )
+        }
     ) { innerPadding ->
         SetUpNavHost(
             navController = navController,
@@ -82,20 +83,24 @@ fun SetUpNavHost(
     navController: NavHostController,
     modifier: Modifier = Modifier,
     
-) {
+    ) {
     NavHost(
         navController = navController,
         startDestination = Search.route,
         modifier = modifier
     ) {
         composable(route = Search.route) {
-            SearchScreen()
+            SearchScreen(
+                onSearch = { navController.navigateSingleTopTo(Details.route)}
+            )
         }
-        composable(route = DetailsScreen.route) {
+        composable(route = Details.route) {
             DetailsScreen()
         }
         composable(route = Saved.route) {
-            SavedScreen()
+            SavedScreen(
+                onItemClick = { navController.navigateSingleTopTo(Details.route) }
+            )
         }
     }
 }

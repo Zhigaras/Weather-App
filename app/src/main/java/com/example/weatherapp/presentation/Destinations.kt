@@ -17,7 +17,7 @@ object Saved : Destination {
     override val route = "Saved"
 }
 
-object DetailsScreen : Destination {
+object Details : Destination {
     override val icon = R.drawable.baseline_wb_sunny_24
     override val route = "Details"
 }

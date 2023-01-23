@@ -21,6 +21,10 @@ class MainRepository @Inject constructor(
         localeRepository.saveWeatherItem(weatherItem)
     }
     
+    suspend fun findWeatherItem(request: String): WeatherItem? {
+        return localeRepository.findWeatherItem(request)
+    }
+    
     suspend fun deleteWeatherItem(weatherItem: WeatherItem) {
         localeRepository.deleteWeatherItem(weatherItem)
     }
@@ -33,8 +37,12 @@ class MainRepository @Inject constructor(
         localeRepository.clearWeatherItemsDb()
     }
     
-    suspend fun saveRequestItem(item:String) {
+    suspend fun saveRequestHistoryItem(item:String) {
         localeRepository.saveItemToPrefs(item)
+    }
+    
+    suspend fun deleteRequestHistoryItem(item: String) {
+        localeRepository.deleteItemFromPrefs(item)
     }
     
     suspend fun clearRequestHistory() {

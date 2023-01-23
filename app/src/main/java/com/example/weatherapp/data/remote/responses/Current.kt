@@ -41,9 +41,9 @@ data class Current(
     @Json(name = "uv")
     val uv: Int,
     @Json(name = "vis_km")
-    val visKm: Int,
+    val visKm: Double,
     @Json(name = "vis_miles")
-    val visMiles: Int,
+    val visMiles: Double,
     @Json(name = "wind_degree")
     val windDegree: Int,
     @Json(name = "wind_dir")

@@ -24,6 +24,12 @@ class DataStorageManager @Inject constructor(
         }
     }
     
+    suspend fun deleteItemFromPrefs(item: String) {
+        dataStore.edit {prefs ->
+            prefs.remove(longPreferencesKey(item))
+        }
+    }
+    
     suspend fun clearPrefs() {
         dataStore.edit { prefs ->
             prefs.clear()

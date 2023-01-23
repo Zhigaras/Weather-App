@@ -14,6 +14,10 @@ class LocaleRepository @Inject constructor(
         weatherDao.insertWeatherItem(weatherItem)
     }
     
+    suspend fun findWeatherItem(request: String): WeatherItem? {
+        return weatherDao.findWeatherItem(request)
+    }
+    
     suspend fun deleteWeatherItem(weatherItem: WeatherItem) {
         weatherDao.deleteWeatherItem(weatherItem)
     }
@@ -28,6 +32,10 @@ class LocaleRepository @Inject constructor(
     
     suspend fun saveItemToPrefs(item:String) {
         dataStoreManager.saveItemToPrefs(item)
+    }
+    
+    suspend fun deleteItemFromPrefs(item: String) {
+        dataStoreManager.deleteItemFromPrefs(item)
     }
     
     suspend fun clearPrefs() {
