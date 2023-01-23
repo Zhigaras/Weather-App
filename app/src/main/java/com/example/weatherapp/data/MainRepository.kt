@@ -1,5 +1,6 @@
 package com.example.weatherapp.data
 
+import androidx.datastore.preferences.core.Preferences
 import com.example.weatherapp.data.locale.LocaleRepository
 import com.example.weatherapp.data.locale.db.WeatherItem
 import com.example.weatherapp.data.remote.RemoteRepository
@@ -30,5 +31,17 @@ class MainRepository @Inject constructor(
     
     suspend fun clearWeatherItemsDb() {
         localeRepository.clearWeatherItemsDb()
+    }
+    
+    suspend fun saveRequestItem(item:String) {
+        localeRepository.saveItemToPrefs(item)
+    }
+    
+    suspend fun clearRequestHistory() {
+        localeRepository.clearPrefs()
+    }
+    
+    fun observeRequestHistory(): Flow<Preferences> {
+        return localeRepository.observePrefs()
     }
 }

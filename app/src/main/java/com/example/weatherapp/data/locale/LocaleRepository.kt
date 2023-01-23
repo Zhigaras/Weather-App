@@ -1,5 +1,6 @@
 package com.example.weatherapp.data.locale
 
+import androidx.datastore.preferences.core.Preferences
 import com.example.weatherapp.data.locale.db.WeatherDao
 import com.example.weatherapp.data.locale.db.WeatherItem
 import kotlinx.coroutines.flow.Flow
@@ -27,5 +28,13 @@ class LocaleRepository @Inject constructor(
     
     suspend fun saveItemToPrefs(item:String) {
         dataStoreManager.saveItemToPrefs(item)
+    }
+    
+    suspend fun clearPrefs() {
+        dataStoreManager.clearPrefs()
+    }
+    
+    fun observePrefs(): Flow<Preferences> {
+        return dataStoreManager.observePrefs()
     }
 }
