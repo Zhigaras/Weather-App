@@ -22,16 +22,7 @@ class MainViewModel @Inject constructor(
     val detailsFlow = _detailsFlow.asStateFlow()
     
     val whetherItemsFlow = mainRepository.observeWeatherItems()
-    val historyItemsFlow = mainRepository.observeRequestHistory().map {
-        it.toMutablePreferences()
-            .asMap()
-            .mapKeys { (k, _) -> k.name }
-            .mapValues { (_, v) -> v.toString().toLongOrNull() }
-            .toList()
-            .sortedBy { (_, v) -> v }
-            .reversed()
-            .map { (k, _) -> k }
-    }
+    val historyItemsFlow = mainRepository.observeRequestHistory()
     
     fun getWeather(cityName: String) {
         ioScope.launch {
