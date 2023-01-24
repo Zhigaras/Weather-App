@@ -4,7 +4,9 @@ import androidx.datastore.preferences.core.Preferences
 import com.example.weatherapp.data.locale.LocaleRepository
 import com.example.weatherapp.data.locale.db.WeatherItem
 import com.example.weatherapp.data.remote.RemoteRepository
+import com.example.weatherapp.data.remote.responses.WeatherResponse
 import kotlinx.coroutines.flow.Flow
+import retrofit2.Response
 import javax.inject.Inject
 
 class MainRepository @Inject constructor(
@@ -12,7 +14,7 @@ class MainRepository @Inject constructor(
     private val localeRepository: LocaleRepository
 ) {
 
-    suspend fun getWeatherFromRemote(city: String): WeatherItem? {
+    suspend fun getWeatherFromRemote(city: String): Response<WeatherResponse> {
         return remoteRepository.getWeather(city)
     }
     

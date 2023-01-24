@@ -1,5 +1,6 @@
 package com.example.weatherapp.presentation.compose
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -22,10 +23,12 @@ import com.example.weatherapp.presentation.MainViewModel
 
 @Composable
 fun SavedScreen(
-    onItemClick: (String) -> Unit
+    startTransition: (String) -> Unit,
+    viewModel: MainViewModel = hiltViewModel()
 ) {
     
-    val viewModel: MainViewModel = hiltViewModel()
+    Log.d("ZZZ", "Saved - ${viewModel.hashCode()}")
+    
     val lazyWeatherItems = viewModel.whetherItemsFlow.collectAsState(initial = emptyList())
     
     LazyColumn {
@@ -33,7 +36,7 @@ fun SavedScreen(
             WeatherLazyItem(
                 weatherItem = weatherItem,
                 onDeleteClick = { viewModel.deleteWeatherItem(weatherItem) },
-                onItemClick = { onItemClick(weatherItem.cityName) }
+                onItemClick = { startTransition(weatherItem.cityName) }
             )
         }
     }

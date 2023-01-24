@@ -1,7 +1,6 @@
 package com.example.weatherapp.presentation
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
@@ -56,7 +55,7 @@ fun WeatherApplication() {
     val currentScreen = bottomTabList.find { it.route == currentDestination?.route } ?: Search
     
     bottomBarState = when (currentDestination?.route) {
-        Details.route -> false
+        Details.routeWithArgs -> false
         else -> true
     }
     
@@ -91,8 +90,7 @@ fun SetUpNavHost(
     ) {
         composable(route = Search.route) {
             SearchScreen(
-                onSearch = { cityName ->
-                    Log.d("AAA", "navGraph - $cityName")
+                startTransition = { cityName ->
                     navController.navigateSingleTopTo("${Details.route}/$cityName")
                 }
             )
@@ -106,7 +104,7 @@ fun SetUpNavHost(
         }
         composable(route = Saved.route) {
             SavedScreen(
-                onItemClick = { cityName ->
+                startTransition = { cityName ->
                     navController.navigateSingleTopTo("${Details.route}/$cityName")
                 }
             )

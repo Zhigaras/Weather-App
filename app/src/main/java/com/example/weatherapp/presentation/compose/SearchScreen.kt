@@ -1,5 +1,6 @@
 package com.example.weatherapp.presentation.compose
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -30,18 +31,21 @@ import kotlin.collections.ArrayList
 
 @Composable
 fun SearchScreen(
-    onSearch: (String) -> Unit
+    startTransition: (String) -> Unit,
+    viewModel: MainViewModel = hiltViewModel()
 ) {
-    val viewModel: MainViewModel = hiltViewModel()
+    Log.d("ZZZ", "Search - ${viewModel.hashCode()}")
+    
     val lazyHistoryItems = viewModel.historyItemsFlow.collectAsState(initial = emptyList())
     val textState = remember { mutableStateOf(TextFieldValue("")) }
-    fun onItemClick(item: String) {
+    fun startSearch(item: String) {
         textState.value = TextFieldValue(item)
-        onSearch(item)
+        viewModel.saveRequestHistoryItem(item)
+        startTransition(item)
     }
     
     Column {
-        CitySearchView(textState, onSearchButtonClick = { onSearch(it) })
+        CitySearchView(textState, onSearchButtonClick = { startSearch(it) })
         Row(
             modifier = Modifier.padding(8.dp),
             verticalAlignment = Alignment.CenterVertically
@@ -61,7 +65,7 @@ fun SearchScreen(
         ItemList(
             state = textState,
             items = lazyHistoryItems,
-            onItemClick = { onItemClick(it) },
+            onItemClick = { startSearch(it) },
             onDeleteClick = { viewModel.deleteRequest(it) }
         )
     }
@@ -75,6 +79,7 @@ fun CitySearchView(
 ) {
     TextField(
         value = state.value,
+        maxLines = 1,
         onValueChange = { value ->
             state.value = value
         },
@@ -82,6 +87,7 @@ fun CitySearchView(
         textStyle = TextStyle(color = MaterialTheme.colorScheme.onBackground, fontSize = 18.sp),
         leadingIcon = {
             IconButton(
+                enabled = state.value != TextFieldValue(""),
                 content = {
                     Icon(
                         imageVector = Icons.Default.Search,
