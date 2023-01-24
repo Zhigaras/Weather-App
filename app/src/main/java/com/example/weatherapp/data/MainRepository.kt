@@ -33,18 +33,18 @@ class MainRepository @Inject constructor(
     }
     
     suspend fun saveRequestHistoryItem(item:String) {
-        localeRepository.saveItemToPrefs(item)
+        localeRepository.saveRequestHistoryItem(item)
     }
     
     suspend fun deleteRequestHistoryItem(item: String) {
-        localeRepository.deleteItemFromPrefs(item)
+        localeRepository.deleteRequestHistoryItem(item)
     }
     
     suspend fun clearRequestHistory() {
-        localeRepository.clearPrefs()
+        localeRepository.clearRequestHistory()
     }
     
     fun observeRequestHistory(): Flow<List<String>> {
-        return localeRepository.observePrefs()
+        return localeRepository.observeRequestHistory()
     }
 }

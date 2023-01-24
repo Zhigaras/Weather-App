@@ -19,9 +19,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.weatherapp.presentation.compose.BottomTabRow
-import com.example.weatherapp.presentation.compose.DetailsScreen
-import com.example.weatherapp.presentation.compose.SavedScreen
-import com.example.weatherapp.presentation.compose.SearchScreen
+import com.example.weatherapp.presentation.detailsscreen.DetailsScreen
+import com.example.weatherapp.presentation.savedscreen.SavedScreen
+import com.example.weatherapp.presentation.searchscreen.SearchScreen
 import com.example.weatherapp.presentation.theme.WeatherAppComposableTheme
 import dagger.hilt.android.AndroidEntryPoint
 

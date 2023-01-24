@@ -1,4 +1,4 @@
-package com.example.weatherapp.presentation.compose
+package com.example.weatherapp.presentation.savedscreen
 
 import android.util.Log
 import androidx.compose.foundation.background
@@ -19,12 +19,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.weatherapp.data.locale.db.WeatherItem
-import com.example.weatherapp.presentation.MainViewModel
 
 @Composable
 fun SavedScreen(
     startTransition: (String) -> Unit,
-    viewModel: MainViewModel = hiltViewModel()
+    viewModel: SavedViewModel = hiltViewModel()
 ) {
     
     Log.d("ZZZ", "Saved - ${viewModel.hashCode()}")

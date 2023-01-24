@@ -1,4 +1,4 @@
-package com.example.weatherapp.presentation.compose
+package com.example.weatherapp.presentation.detailsscreen
 
 import android.util.Log
 import androidx.compose.foundation.layout.*
@@ -15,11 +15,12 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.weatherapp.R
 import com.example.weatherapp.domain.ApiResult
-import com.example.weatherapp.presentation.MainViewModel
+import com.example.weatherapp.presentation.compose.ErrorItem
+import com.example.weatherapp.presentation.compose.LoadingView
 
 @Composable
 fun DetailsScreen(
-    cityName: String, viewModel: MainViewModel = hiltViewModel()
+    cityName: String, viewModel: DetailsViewModel = hiltViewModel()
 ) {
     viewModel.getWeather(cityName)
     val weather = viewModel.detailsFlow.collectAsState().value

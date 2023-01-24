@@ -1,4 +1,4 @@
-package com.example.weatherapp.presentation.compose
+package com.example.weatherapp.presentation.searchscreen
 
 import android.util.Log
 import androidx.compose.foundation.background
@@ -25,14 +25,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.weatherapp.R
-import com.example.weatherapp.presentation.MainViewModel
 import java.util.*
 import kotlin.collections.ArrayList
 
 @Composable
 fun SearchScreen(
     startTransition: (String) -> Unit,
-    viewModel: MainViewModel = hiltViewModel()
+    viewModel: SearchViewModel = hiltViewModel()
 ) {
     Log.d("ZZZ", "Search - ${viewModel.hashCode()}")
     

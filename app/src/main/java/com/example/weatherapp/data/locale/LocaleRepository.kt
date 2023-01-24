@@ -26,19 +26,19 @@ class LocaleRepository @Inject constructor(
         return weatherDao.observeWeatherItems()
     }
     
-    suspend fun saveItemToPrefs(item:String) {
+    suspend fun saveRequestHistoryItem(item:String) {
         dataStoreManager.saveItemToPrefs(item)
     }
     
-    suspend fun deleteItemFromPrefs(item: String) {
+    suspend fun deleteRequestHistoryItem(item: String) {
         dataStoreManager.deleteItemFromPrefs(item)
     }
     
-    suspend fun clearPrefs() {
+    suspend fun clearRequestHistory() {
         dataStoreManager.clearPrefs()
     }
     
-    fun observePrefs(): Flow<List<String>> {
+    fun observeRequestHistory(): Flow<List<String>> {
         return dataStoreManager.observePrefs().map {
             it.toMutablePreferences()
                 .asMap()

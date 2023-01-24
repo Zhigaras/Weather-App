@@ -1,4 +1,4 @@
-package com.example.weatherapp.presentation
+package com.example.weatherapp.presentation.detailsscreen
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel @Inject constructor(
+class DetailsViewModel @Inject constructor(
     private val mainRepository: MainRepository
 ) : ViewModel() {
     
@@ -20,9 +20,6 @@ class MainViewModel @Inject constructor(
     
     private val _detailsFlow = MutableStateFlow<ApiResult<WeatherItem>>(ApiResult.Loading())
     val detailsFlow = _detailsFlow.asStateFlow()
-    
-    val whetherItemsFlow = mainRepository.observeWeatherItems()
-    val historyItemsFlow = mainRepository.observeRequestHistory()
     
     fun getWeather(cityName: String) {
         ioScope.launch {
@@ -40,30 +37,6 @@ class MainViewModel @Inject constructor(
                         mainRepository.saveWeatherItem(remoteResponse.data)
                 }
             }
-        }
-    }
-    
-    fun saveRequestHistoryItem(item: String) {
-        ioScope.launch {
-            mainRepository.saveRequestHistoryItem(item)
-        }
-    }
-    
-    fun deleteRequest(item: String) {
-        ioScope.launch {
-            mainRepository.deleteRequestHistoryItem(item)
-        }
-    }
-    
-    fun clearRequestHistory() {
-        ioScope.launch {
-            mainRepository.clearRequestHistory()
-        }
-    }
-    
-    fun deleteWeatherItem(item: WeatherItem) {
-        ioScope.launch {
-            mainRepository.deleteWeatherItem(item)
         }
     }
 }
