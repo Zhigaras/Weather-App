@@ -4,7 +4,6 @@ import androidx.datastore.preferences.core.Preferences
 import com.example.weatherapp.data.locale.LocaleRepository
 import com.example.weatherapp.data.locale.db.WeatherItem
 import com.example.weatherapp.data.remote.RemoteRepository
-import com.example.weatherapp.data.remote.responses.WeatherResponse
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -13,7 +12,7 @@ class MainRepository @Inject constructor(
     private val localeRepository: LocaleRepository
 ) {
 
-    suspend fun getWeather(city: String): WeatherResponse? {
+    suspend fun getWeatherFromRemote(city: String): WeatherItem? {
         return remoteRepository.getWeather(city)
     }
     
@@ -21,8 +20,12 @@ class MainRepository @Inject constructor(
         localeRepository.saveWeatherItem(weatherItem)
     }
     
-    suspend fun findWeatherItem(request: String): WeatherItem? {
-        return localeRepository.findWeatherItem(request)
+    suspend fun findWeatherItemByCityName(request: String): WeatherItem? {
+        return localeRepository.findWeatherItemByCityName(request)
+    }
+    
+    suspend fun findWeatherItemById(request: String): WeatherItem {
+        return localeRepository.findWeatherItemById(request)
     }
     
     suspend fun deleteWeatherItem(weatherItem: WeatherItem) {

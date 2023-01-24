@@ -1,6 +1,7 @@
 package com.example.weatherapp.presentation
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
@@ -81,8 +82,7 @@ fun WeatherApplication() {
 @Composable
 fun SetUpNavHost(
     navController: NavHostController,
-    modifier: Modifier = Modifier,
-    
+    modifier: Modifier = Modifier
     ) {
     NavHost(
         navController = navController,
@@ -91,15 +91,24 @@ fun SetUpNavHost(
     ) {
         composable(route = Search.route) {
             SearchScreen(
-                onSearch = { navController.navigateSingleTopTo(Details.route)}
+                onSearch = { cityName ->
+                    Log.d("AAA", "navGraph - $cityName")
+                    navController.navigateSingleTopTo("${Details.route}/$cityName")
+                }
             )
         }
-        composable(route = Details.route) {
-            DetailsScreen()
+        composable(
+            route = Details.routeWithArgs,
+            arguments = Details.arguments
+        ) {navBackStackEntry ->
+            val cityName = navBackStackEntry.arguments?.getString(Details.cityName)
+            DetailsScreen(cityName!!)
         }
         composable(route = Saved.route) {
             SavedScreen(
-                onItemClick = { navController.navigateSingleTopTo(Details.route) }
+                onItemClick = { cityName ->
+                    navController.navigateSingleTopTo("${Details.route}/$cityName")
+                }
             )
         }
     }

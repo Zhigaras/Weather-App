@@ -22,7 +22,7 @@ import com.example.weatherapp.presentation.MainViewModel
 
 @Composable
 fun SavedScreen(
-    onItemClick: () -> Unit
+    onItemClick: (String) -> Unit
 ) {
     
     val viewModel: MainViewModel = hiltViewModel()
@@ -33,9 +33,8 @@ fun SavedScreen(
             WeatherLazyItem(
                 weatherItem = weatherItem,
                 onDeleteClick = { viewModel.deleteWeatherItem(weatherItem) },
-                onItemClick = onItemClick
+                onItemClick = { onItemClick(weatherItem.cityName) }
             )
-            
         }
     }
 }

@@ -10,7 +10,10 @@ interface WeatherDao {
     suspend fun insertWeatherItem(weatherItem: WeatherItem)
     
     @Query("SELECT * FROM weather_items WHERE cityName LIKE :request")
-    suspend fun findWeatherItem(request: String): WeatherItem?
+    suspend fun findWeatherItemByCityName(request: String): WeatherItem?
+    
+    @Query("SELECT * FROM weather_items WHERE id IS :weatherItemId")
+    suspend fun findWeatherItemById(weatherItemId: String): WeatherItem
     
     @Delete()
     suspend fun deleteWeatherItem(weatherItem: WeatherItem)

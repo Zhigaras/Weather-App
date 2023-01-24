@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.TextFieldValue
@@ -22,38 +23,40 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.weatherapp.R
 import com.example.weatherapp.presentation.MainViewModel
 import java.util.*
 import kotlin.collections.ArrayList
 
 @Composable
 fun SearchScreen(
-    onSearch: () -> Unit
+    onSearch: (String) -> Unit
 ) {
     val viewModel: MainViewModel = hiltViewModel()
     val lazyHistoryItems = viewModel.historyItemsFlow.collectAsState(initial = emptyList())
     val textState = remember { mutableStateOf(TextFieldValue("")) }
     fun onItemClick(item: String) {
         textState.value = TextFieldValue(item)
-        viewModel.searchWeather(item)
-        onSearch()
+        onSearch(item)
     }
     
     Column {
-        CitySearchView(textState, onSearchButtonClick = { viewModel.searchWeather(it) })
+        CitySearchView(textState, onSearchButtonClick = { onSearch(it) })
         Row(
             modifier = Modifier.padding(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Search history",
+                text = stringResource(R.string.search_history),
                 style = MaterialTheme.typography.bodySmall,
                 color = Color.Gray,
                 modifier = Modifier.weight(1f)
             )
             ClickableText(
-                text = AnnotatedString("clear"),
-                onClick = { viewModel.clearRequestHistory() })
+                text = AnnotatedString(stringResource(R.string.clear)),
+                onClick = { viewModel.clearRequestHistory() },
+                modifier = Modifier.padding(end = 8.dp)
+            )
         }
         ItemList(
             state = textState,
@@ -82,7 +85,7 @@ fun CitySearchView(
                 content = {
                     Icon(
                         imageVector = Icons.Default.Search,
-                        contentDescription = "Search"
+                        contentDescription = stringResource(R.string.search_text)
                     )
                 },
                 modifier = Modifier
@@ -148,7 +151,7 @@ fun ItemList(
         }
         items(filteredItems) { filteredItem ->
             ItemListItem(
-                ItemText = filteredItem,
+                itemText = filteredItem,
                 onItemClick = { onItemClick(it) },
                 onDeleteClick = onDeleteClick
             )
@@ -158,13 +161,13 @@ fun ItemList(
 
 @Composable
 fun ItemListItem(
-    ItemText: String,
+    itemText: String,
     onItemClick: (String) -> Unit = {},
     onDeleteClick: (String) -> Unit = {}
 ) {
     Row(
         modifier = Modifier
-            .clickable(onClick = { onItemClick(ItemText) })
+            .clickable(onClick = { onItemClick(itemText) })
             .background(color = MaterialTheme.colorScheme.background)
             .fillMaxWidth()
             .padding(PaddingValues(8.dp, 8.dp))
@@ -172,18 +175,18 @@ fun ItemListItem(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = ItemText,
+            text = itemText,
             style = MaterialTheme.typography.headlineSmall,
             color = MaterialTheme.colorScheme.onBackground,
             modifier = Modifier.weight(1f),
             maxLines = 1
         )
         IconButton(
-            onClick = { onDeleteClick(ItemText) }
+            onClick = { onDeleteClick(itemText) }
         ) {
             Icon(
                 imageVector = Icons.Default.Close,
-                contentDescription = "Delete request"
+                contentDescription = stringResource(R.string.delete_request)
             )
         }
     }

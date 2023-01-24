@@ -1,16 +1,16 @@
 package com.example.weatherapp.data.remote
 
-import com.example.weatherapp.data.remote.responses.WeatherResponse
+import com.example.weatherapp.data.locale.db.WeatherItem
 import javax.inject.Inject
 
 class RemoteRepository @Inject constructor(
     private val weatherApi: WeatherApi
 ) {
     
-    suspend fun getWeather(city:String): WeatherResponse? {
+    suspend fun getWeather(city:String): WeatherItem? {
         val result = weatherApi.getWeather(city)
         if (result.isSuccessful) {
-            return result.body()
+            return result.body()?.toWeatherItem()
         }
         return null
     }

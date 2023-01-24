@@ -14,8 +14,12 @@ class LocaleRepository @Inject constructor(
         weatherDao.insertWeatherItem(weatherItem)
     }
     
-    suspend fun findWeatherItem(request: String): WeatherItem? {
-        return weatherDao.findWeatherItem(request)
+    suspend fun findWeatherItemByCityName(request: String): WeatherItem? {
+        return weatherDao.findWeatherItemByCityName(request)
+    }
+    
+    suspend fun findWeatherItemById(weatherItemId: String): WeatherItem {
+        return weatherDao.findWeatherItemById(weatherItemId)
     }
     
     suspend fun deleteWeatherItem(weatherItem: WeatherItem) {
