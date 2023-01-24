@@ -20,7 +20,7 @@ sealed class ApiResult <out T> (val status: ApiStatus, val data: T?, val message
         message = exception
     )
     
-    data class Loading<out R>(val isLoading: Boolean): ApiResult<R>(
+    class Loading<out R> : ApiResult<R>(
         status = ApiStatus.LOADING,
         data = null,
         message = null

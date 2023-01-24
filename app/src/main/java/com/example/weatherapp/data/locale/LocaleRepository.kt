@@ -18,20 +18,12 @@ class LocaleRepository @Inject constructor(
         return weatherDao.findWeatherItemByCityName(request)
     }
     
-    suspend fun findWeatherItemById(weatherItemId: String): WeatherItem {
-        return weatherDao.findWeatherItemById(weatherItemId)
-    }
-    
     suspend fun deleteWeatherItem(weatherItem: WeatherItem) {
         weatherDao.deleteWeatherItem(weatherItem)
     }
     
     fun observeWeatherItems(): Flow<List<WeatherItem>> {
         return weatherDao.observeWeatherItems()
-    }
-    
-    suspend fun clearWeatherItemsDb() {
-        weatherDao.clearDb()
     }
     
     suspend fun saveItemToPrefs(item:String) {

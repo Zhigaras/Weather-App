@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.weatherapp.data.MainRepository
 import com.example.weatherapp.data.locale.db.WeatherItem
+import com.example.weatherapp.domain.ApiResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
@@ -15,21 +16,10 @@ class MainViewModel @Inject constructor(
     private val mainRepository: MainRepository
 ) : ViewModel() {
     
-    private val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
-        _errorFlow.value = throwable.localizedMessage
-    }
+    private val ioScope = CoroutineScope(viewModelScope.coroutineContext + Dispatchers.IO)
     
-    private val ioScope = CoroutineScope(
-        viewModelScope.coroutineContext +
-                Dispatchers.IO +
-                coroutineExceptionHandler
-    )
-    
-    private val _detailsFlow = MutableStateFlow<WeatherItem>(WeatherItem())
+    private val _detailsFlow = MutableStateFlow<ApiResult<WeatherItem>>(ApiResult.Loading())
     val detailsFlow = _detailsFlow.asStateFlow()
-    
-    private val _errorFlow = MutableStateFlow<String?>(null)
-    val errorFlow = _errorFlow.asStateFlow()
     
     val whetherItemsFlow = mainRepository.observeWeatherItems()
     val historyItemsFlow = mainRepository.observeRequestHistory().map {
@@ -45,22 +35,18 @@ class MainViewModel @Inject constructor(
     
     fun getWeather(cityName: String) {
         ioScope.launch {
+            _detailsFlow.value = ApiResult.Loading()
             val dbReply = mainRepository.findWeatherItemByCityName(cityName)
             if (dbReply != null) {
-                _detailsFlow.value = dbReply
+                _detailsFlow.value = ApiResult.Success(dbReply)
                 Log.d("XXX", "loaded from db")
             } else {
                 val remoteResponse = mainRepository.getWeatherFromRemote(cityName)
-                if (remoteResponse.isSuccessful) {
-                    val result = remoteResponse.body()?.toWeatherItem()
-                    if (result != null) {
-                        mainRepository.saveWeatherItem(result)
-                        _detailsFlow.value = result
-                        _errorFlow.value = null
-                        Log.d("XXX", "loaded from remote")
-                    } else {
-                        _errorFlow.value = "Network error. Try again please"
-                    }
+                _detailsFlow.value = remoteResponse
+                Log.d("XXX", "loaded from remote")
+                if (remoteResponse is ApiResult.Success) {
+                    if (remoteResponse.data != null)
+                        mainRepository.saveWeatherItem(remoteResponse.data)
                 }
             }
         }

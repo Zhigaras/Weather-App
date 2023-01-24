@@ -25,15 +25,6 @@ fun LoadingView(
 }
 
 @Composable
-fun LoadingItem() {
-    CircularProgressIndicator(
-        modifier = Modifier.fillMaxWidth()
-            .padding(16.dp)
-            .wrapContentWidth(Alignment.CenterHorizontally)
-    )
-}
-
-@Composable
 fun ErrorItem(
     message: String,
     modifier: Modifier = Modifier,

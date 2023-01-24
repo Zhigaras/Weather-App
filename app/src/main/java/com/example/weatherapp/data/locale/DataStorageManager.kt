@@ -11,7 +11,6 @@ import javax.inject.Inject
 class DataStorageManager @Inject constructor(
     private val dataStore: DataStore<Preferences>
 ) {
-    
     companion object {
         const val PREFERENCES_STORE_NAME = "searchHistoryStore"
     }

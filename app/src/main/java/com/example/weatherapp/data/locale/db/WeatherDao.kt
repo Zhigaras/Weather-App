@@ -9,18 +9,12 @@ interface WeatherDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertWeatherItem(weatherItem: WeatherItem)
     
-    @Query("SELECT * FROM weather_items WHERE cityName LIKE :request")
+    @Query("SELECT * FROM weather_items WHERE cityName LIKE '%' || :request || '%' ORDER BY lastUpdatedEpoch DESC LIMIT 1")
     suspend fun findWeatherItemByCityName(request: String): WeatherItem?
-    
-    @Query("SELECT * FROM weather_items WHERE id IS :weatherItemId")
-    suspend fun findWeatherItemById(weatherItemId: String): WeatherItem
     
     @Delete()
     suspend fun deleteWeatherItem(weatherItem: WeatherItem)
     
     @Query("SELECT * FROM weather_items ORDER BY lastUpdatedEpoch DESC")
     fun observeWeatherItems(): Flow<List<WeatherItem>>
-    
-    @Query("DELETE FROM weather_items")
-    suspend fun clearDb()
 }
