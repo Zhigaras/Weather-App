@@ -37,7 +37,6 @@ fun ErrorItem(
     ) {
         Text(
             text = message,
-            maxLines = 1,
             modifier = Modifier.weight(1f),
             style = MaterialTheme.typography.titleMedium,
             color = Color.Red
